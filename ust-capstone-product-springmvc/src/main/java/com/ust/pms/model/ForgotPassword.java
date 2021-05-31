@@ -1,6 +1,6 @@
 package com.ust.pms.model;
 
-import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
 
@@ -8,7 +8,9 @@ import lombok.Data;
 @Data
 public class ForgotPassword {
 
-	@Id
+	@NotBlank
 	private String emailId;
+	@NotBlank(message = "user name is mandatory")
+	private String username;
 
 }

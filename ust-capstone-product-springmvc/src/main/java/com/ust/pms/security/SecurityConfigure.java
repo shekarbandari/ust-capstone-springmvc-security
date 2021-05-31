@@ -14,23 +14,7 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 @EnableWebSecurity
 public class SecurityConfigure extends WebSecurityConfigurerAdapter {
-	/*
-	 * @Autowired private MyUserDetailsService myUserDetailsService;
-	 * 
-	 * @Override protected void configure(AuthenticationManagerBuilder auth) throws
-	 * Exception { auth.userDetailsService(myUserDetailsService); }
-	 */
-	// in memory authentication
-	// 3 users and 2 roles
-//	@Autowired
-//	public void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-//		authenticationManagerBuilder.inMemoryAuthentication()
-//		       .withUser("shekarbandari").password("shekar@1234").authorities("ROLE_ADMIN", "ROLE_USER").and().
-//				withUser("rudra").password("rudra@1234").authorities("ROLE_USER");//.and()
-//				//.withUser("aarya").password("aarya@1234").authorities("ROLE_ADMIN", "ROLE_USER");
-//
-//	}
-
+	
 	@Autowired
 	DataSource datasource;
 	
@@ -49,6 +33,7 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/register").permitAll() //forgotPasswordForm
 		.antMatchers("/forgotPasswordForm").permitAll() 
 		.antMatchers("/forgotPassword").permitAll() 
+		//.antMatchers("http://localhost:6060/changePassword").permitAll() 
 		.antMatchers("/index").hasAnyRole("USER")
 				.antMatchers("/productList").hasAnyRole("USER","ADMIN")
 				.antMatchers("/customer").hasAnyRole("ADMIN")

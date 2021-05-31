@@ -60,8 +60,8 @@ public class CartController {
 					msg.setFrom("shekharbandari@gmail.com");
 					msg.setTo("shekarbandari@gmail.com");
 					msg.setSubject("One Product hasbeen added to your Cart ");
-					msg.setText("Product : " + cart.getProductName() + "Price :" + cart.getPrice()
-							+ "  has been added to your Cart");
+					msg.setText("Product :   " + cart.getProductName() + "   Price :   " + cart.getPrice()  + "   Quantity :   " + cart.getQuantityOnHand()
+							+ "      has been added to your Cart");
 					mailSender.send(msg);
 
 					Product p = new Product();

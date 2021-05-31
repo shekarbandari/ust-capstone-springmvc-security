@@ -14,8 +14,12 @@
 	<form:form action="/forgotPassword" method="post" modelAttribute="command">
 		<table>
 			<tr>
-				<td><label for="emailId">Email</label></td>
+				<td><label for="emailId">Email :</label></td>
 				<td><form:input path="emailId" /></td>
+			</tr>
+			<tr>
+			<td><label for="username">User Name :</label></td>
+				<td><form:input path="username" /></td>
 			</tr>
 			<tr>
 				

@@ -8,7 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.ust.pms.model.ChangePassword;
 import com.ust.pms.model.ForgotPassword;
+import com.ust.pms.util.UserUtil;
 
 @Controller
 public class LoginController {
@@ -26,13 +28,21 @@ public class LoginController {
 	
 	@RequestMapping(value="/forgotPassword",method=RequestMethod.POST)
 	public String forgotPassword(ForgotPassword forgotPassword,Model model) {
-		//model.addAttribute("command",new ForgotPassword());
+		String userName=forgotPassword.getUsername();
 		msg.setFrom("shekharbandari@gmail.com");
-		msg.setTo("shekarbandari@gmail.com");
+		msg.setTo(forgotPassword.getEmailId());
 		msg.setSubject("Forgot Password using UST Browser ");
-		msg.setText("forgot password link i will arranged");
+			
+		msg.setText("http://localhost:6060/changePassword?user="+userName);
 		mailSender.send(msg);
 		return "login";
+	}
+	
+	@RequestMapping(value="/changePassword",method=RequestMethod.GET)
+	public String changePassword(ChangePassword changePassword,Model model) {
+model.addAttribute("command",new ChangePassword());
+		
+		return "changePassword";
 	}
 	
 
