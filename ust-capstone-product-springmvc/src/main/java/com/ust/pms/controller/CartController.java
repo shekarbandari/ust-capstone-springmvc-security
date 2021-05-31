@@ -35,33 +35,71 @@ public class CartController {
 	public String saveCart(@PathVariable("productId") int productId, Model model) {
 
 		model.addAttribute("username", UserUtil.getUserName());
-	
 
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("productList");
 
 		List<Cart> cartList1 = cartService.getCartDetails();
 
-
 		if (cartList1.size() < 10) {
-			Product product = productService.getProduct(productId);
-			Cart cart = new Cart();
-			cart.setProductId(product.getProductId());
-			cart.setProductName(product.getProductName());
-			cart.setPrice(product.getPrice());
-			cart.setQuantityOnHand(product.getQuantityOnHand());
 
-			cartService.saveCart(cart);
+			if (cartService.isCartExist(productId)) {
+				Cart product = cartService.getCart(productId);
+				Product pp = productService.getProduct(productId);
+				if (pp.getQuantityOnHand() > 0) {
 
-			msg.setFrom("shekharbandari@gmail.com");
-			msg.setTo("shekarbandari@gmail.com");
-			msg.setSubject("One Product hasbeen added to your Cart ");
-			msg.setText("Product : " + cart.getProductName() + "Price :" + cart.getPrice()
-					+ "  has been added to your Cart");
-			mailSender.send(msg);
+					Cart cart = new Cart();
+					cart.setProductId(product.getProductId());
+					cart.setProductName(product.getProductName());
+					cart.setPrice(product.getPrice());
+					int quantity = (product.getQuantityOnHand()) + 1;
+					cart.setQuantityOnHand(quantity);
 
-		}else {
-			model.addAttribute("moreproducts","exceed more than 10 products in cart page");
+					cartService.updateCart(cart);
+
+					msg.setFrom("shekharbandari@gmail.com");
+					msg.setTo("shekarbandari@gmail.com");
+					msg.setSubject("One Product hasbeen added to your Cart ");
+					msg.setText("Product : " + cart.getProductName() + "Price :" + cart.getPrice()
+							+ "  has been added to your Cart");
+					mailSender.send(msg);
+
+					Product p = new Product();
+					p.setProductId(pp.getProductId());
+					p.setProductName(pp.getProductName());
+					p.setPrice(pp.getPrice());
+					p.setQuantityOnHand((pp.getQuantityOnHand()) - 1);
+
+					productService.updateProduct(p);
+				}
+
+			} else {
+				Product product = productService.getProduct(productId);
+				Cart cart = new Cart();
+				cart.setProductId(product.getProductId());
+				cart.setProductName(product.getProductName());
+				cart.setPrice(product.getPrice());
+				// int q=1;
+				cart.setQuantityOnHand(1);
+
+				cartService.saveCart(cart);
+
+				msg.setFrom("shekharbandari@gmail.com");
+				msg.setTo("shekarbandari@gmail.com");
+				msg.setSubject("One Product hasbeen added to your Cart ");
+				msg.setText("Product : " + cart.getProductName() + "Price :" + cart.getPrice()
+						+ "  has been added to your Cart");
+				mailSender.send(msg);
+				Product p = new Product();
+				p.setProductId(product.getProductId());
+				p.setProductName(product.getProductName());
+				p.setPrice(product.getPrice());
+				int q = (product.getQuantityOnHand()) - 1;
+				p.setQuantityOnHand(q);
+
+				productService.updateProduct(p);
+
+			}
 		}
 		return "redirect:/productList";
 	}
@@ -75,7 +113,6 @@ public class CartController {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("cart");
 
-	
 		List<Cart> cartList = cartService.getCartDetails();
 		mav.addObject("cartList", cartList);
 
@@ -88,12 +125,15 @@ public class CartController {
 
 		Cart cart = cartService.getCart(productId);
 
+		Product p = productService.getProduct(productId);
+	
+		
 		Product product = new Product();
-		product.setProductId(cart.getProductId());
-		product.setProductName(cart.getProductName());
-		product.setQuantityOnHand(cart.getQuantityOnHand());
-		product.setPrice(cart.getPrice());
-		productService.saveProduct(product);
+		product.setProductId(p.getProductId());
+		product.setProductName(p.getProductName());
+		product.setQuantityOnHand((p.getQuantityOnHand()) + cart.getQuantityOnHand());
+		product.setPrice(p.getPrice());
+		productService.updateProduct(product);
 
 		cartService.deleteCart(cart);
 
